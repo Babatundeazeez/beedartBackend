@@ -13,7 +13,8 @@ const addUser = async(req, res) =>{
         }
         res.status(200).json({
             status : "Success",
-            message : "User is successfully Added"
+            message : "User is successfully Added",
+            user
         })
         
     } catch (error) {
