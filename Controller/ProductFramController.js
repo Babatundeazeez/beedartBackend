@@ -45,6 +45,7 @@ const getProduct = async(req, res) =>{
         
     }
 }
+//////////////////////////////////////////////////////////////
     const getFilteredProducts = async (req, res) => {
             const { category, size, occasion } = req.query;
             
@@ -55,8 +56,8 @@ const getProduct = async(req, res) =>{
                 if (occasion) filters.occasion = occasion;
 
                 try {
-                    const product = await productModel.find(filters);
-                    if (!product.length){
+                    const productFilter = await productModel.find(filters);
+                    if (!productFilter.length){
                         return res.status(400).json({
                             status : "error",
                             message : "failed to filter"
@@ -65,7 +66,7 @@ const getProduct = async(req, res) =>{
                     res.status(200).json({
                         status : "success",
                         message : "filter sucessfully",
-                        product
+                        productFilter
                         
                     })
                     // res.json({ frameProduct: product });
@@ -76,9 +77,35 @@ const getProduct = async(req, res) =>{
                     
             
             }  
+            ///////////////////////////////////////////////////////////
+
+            const getSingleProduct = async(req, res) =>{
+                const {id} = req.params
+                try {
+                    const singleFrameProduct = await productModel.findById(id)
+                    if (!singleFrameProduct){
+                        return res.status(400).json({
+                            status : "error",
+                            message : "Product not found"
+                        })
+                    }
+                    res.status(200).json({
+                        status : "Success",
+                        message : "Product successfully ",
+                        singleFrameProduct
+                    })
+
+                    
+                } catch (error) {
+                    console.log(error);
+                    
+                }
+
+            }
 
 module.exports = {
     addProduct,
     getProduct,
-    getFilteredProducts
+    getFilteredProducts,
+    getSingleProduct
 }
