@@ -34,8 +34,13 @@ const userScheme = new mongoose.Schema({
         type : String
     },
     verificationExp : {
-        type : String
-    }
+        type : Date,
+        require : true
+    },
+    // userId : {
+    //     type : String,
+    //     required : true
+    // }
 })
 
 const userModel = mongoose.model("users", userScheme)
