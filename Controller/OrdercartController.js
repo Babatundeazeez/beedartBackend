@@ -5,10 +5,10 @@ const placeCart = async(req, res) => {
     
 
     try {
-        const {carts, totalAmount} = req.body
+        const {carts, totalAmount, paymentReference} = req.body
         const userId = req.user.id;
 
-        const orderCart = await orderModel.create({carts, totalAmount, userId})
+        const orderCart = await orderModel.create({carts, totalAmount, paymentReference, userId, status: "pending"})
         console.log("cartOrder endPoint hit");
         console.log("Request body",req.body);
 
@@ -68,10 +68,42 @@ const getUserOrder = async(req, res) => {
 
 }
 
+// put UpdateUser//////////////////////////////
+const upDateOrderStatus = async(req, res) =>{
+    try {
+        const orderId = req.params.id;
+        const {status} = req.body;
+        const updateOrder = await orderModel.findByIdAndUpdate(orderId, {status}, {new: true})
+        if(!updateOrder){
+            return res.status(401).json({
+                status : "error",
+                message : "order not found",
+                success : false
+            })
+        }
+        res.status(201).json({
+            status : "success",
+            success : true,
+            message : "Order status upDated",
+            updateOrder
+        })
+
+        
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: error.message
+        })
+        
+    }
+}
+
 
 
 
 module.exports = {
     placeCart,
-    getUserOrder
+    getUserOrder,
+    upDateOrderStatus
 }
