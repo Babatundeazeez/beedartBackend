@@ -49,6 +49,7 @@ const verifyEmail = async(req, res) =>{
    
     try {
         const user = await userModel.findOne({verificationToken : token})
+        
         if(!user){
             return res.status(400).json({
                 error : "error",
@@ -79,6 +80,7 @@ const verifyEmail = async(req, res) =>{
 ///////////////////////////////////////////////////////////////////////
 
 const signIn = async(req, res) =>{
+
     const {email, password} = req.body
     try {
         const user = await userModel.findOne({email})
@@ -97,7 +99,7 @@ const signIn = async(req, res) =>{
                 message : "Email or Password is incorrect"
             })
         }
-        ////////////////generate accessToken for the user//////////
+        ////////////////Generate accessToken for the user//////////
         const accessToken = jwt.sign({id: user._id, role: user.role, email: user.email}, process.env.jwt_pass,{expiresIn : process.env.tokenExp})
 
         

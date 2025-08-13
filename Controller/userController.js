@@ -1,4 +1,5 @@
 const userModel = require("../Model/User");
+const { getUserOrder } = require("./OrdercartController");
 
 const addUser = async(req, res) =>{
     console.log(req.body);
@@ -23,6 +24,32 @@ const addUser = async(req, res) =>{
     }
 }
 
+const getUserById = async(req, res) =>{
+        
+    try {
+        const user = await userModel.findById(req.params.id)
+        if(!user){
+            return res.status(401).json({
+                status : "error",
+                message : "failed to get user Id"
+            })
+
+        }
+        res.status(200).json({
+            status: "success",
+            message:"User Id found",
+            user
+        })
+        
+    } catch (error) {
+        console.log(error);
+        
+        
+    }
+}
+
 module.exports = {
-    addUser
+    addUser,
+    getUserById
+    
 }
