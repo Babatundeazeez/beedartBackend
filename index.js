@@ -15,6 +15,7 @@ const userRouter = require("./Router/UserRouter");
 const authRouter = require("./Router/AuthRouter");
 const productRouter = require("./Router/ProductFraRouter");
 const cartRouter = require("./Router/OrderCartRouter");
+const userOrderRouter = require("./Router/UserOrderRouter");
 
 //////MiddleWares/////////
 app.use(express.json())
@@ -42,7 +43,7 @@ connectedMongoDb()
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
-
+app.use('/api/userOrder', userOrderRouter)
 app.use('/api/cart', cartRouter)
 
 
