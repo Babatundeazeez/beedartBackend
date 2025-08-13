@@ -115,7 +115,7 @@ const signIn = async(req, res) =>{
         
     } catch (error) {
         console.log(error);
-        next(error)
+       // next(error)
         
     }
 }
