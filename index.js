@@ -16,11 +16,12 @@ const authRouter = require("./Router/AuthRouter");
 const productRouter = require("./Router/ProductFraRouter");
 const cartRouter = require("./Router/OrderCartRouter");
 const userOrderRouter = require("./Router/UserOrderRouter");
+const blogsRouters = require("./Router/BlogRouter");
 
 //////MiddleWares/////////
 app.use(express.json())
 app.use(cors({
-    origin: ["https://beedaart.netlify.app"],
+    origin: ["http://localhost:5173","https://beedaart.netlify.app"],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }))
@@ -57,6 +58,7 @@ app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
 app.use('/api/userOrder', userOrderRouter)
 app.use('/api/cart', cartRouter)
+app.use('/api/blog', blogsRouters)
 
 
 
