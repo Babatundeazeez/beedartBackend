@@ -3,7 +3,12 @@ const productModel = require("../Model/ProductFrame")
 const addProduct = async(req, res) =>{
     const productImage = req.file.path
     try {
-        const productFrame = await productModel.create({...req.body, image: productImage})
+        const productFrame = await productModel.create({
+            ...req.body, 
+            image: productImage, 
+            createdBy: req.user._id
+        })
+        
         console.log(req.body);
         if(!productFrame){
             return res.status(400).json({

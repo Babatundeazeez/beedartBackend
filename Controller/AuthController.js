@@ -17,7 +17,7 @@ const signUp = async(req, res) =>{
         const verificationExp = Date.now() + 1000 * 60 * 30
 
 
-        const user = await userModel.create({...req.body, password : hashPassword, verificationToken : token, verificationExp})
+        const user = await userModel.create({...req.body, password : hashPassword, role: req.body.role || "user", verificationToken : token, verificationExp})
 
         if (!user){
             return res.status(400).json({
@@ -100,7 +100,7 @@ const signIn = async(req, res) =>{
             })
         }
         ////////////////Generate accessToken for the user//////////
-        const accessToken = jwt.sign({id: user._id, role: user.role, email: user.email}, process.env.jwt_pass,{expiresIn : process.env.tokenExp})
+        const accessToken = jwt.sign({id: user._id, role: user.role, email: user.email}, process.env.JWT_SECRET,{expiresIn : process.env.tokenExp})
 
         
         

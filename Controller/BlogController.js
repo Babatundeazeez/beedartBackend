@@ -3,7 +3,12 @@ const blogModel = require("../Model/BlogContent");
 const creatBlog = async(req, res) =>{
     const blogImage = req.file.path
     try {
-        const blog = await blogModel.create({...req.body, image :blogImage})
+        const blog = await blogModel.create({
+            ...req.body, 
+            image :blogImage, 
+            createdBy: req.user._id,
+            
+        })
         if(!blog){
             return res.status(400).json({
                 status : "error",
