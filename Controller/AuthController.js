@@ -5,7 +5,7 @@ const generateRandomString = require("../utilities/GenRandom")
 const sendverificationMail = require("../utilities/SendVerificationMail")
 
 //////////////////////////////////////////////////////////
-const signUp = async(req, res) =>{
+const signUp = async(req, res, next) =>{
 
     const {password, email, name} = req.body
 
@@ -38,6 +38,7 @@ const signUp = async(req, res) =>{
         
     } catch (error) {
         console.log(error);
+        next(error)
         
     }
 
@@ -79,7 +80,7 @@ const verifyEmail = async(req, res) =>{
 }
 ///////////////////////////////////////////////////////////////////////
 
-const signIn = async(req, res) =>{
+const signIn = async(req, res, next) =>{
 
     const {email, password} = req.body
     try {
@@ -115,7 +116,7 @@ const signIn = async(req, res) =>{
         
     } catch (error) {
         console.log(error);
-       // next(error)
+        next(error)
         
     }
 }

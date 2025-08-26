@@ -17,6 +17,7 @@ const productRouter = require("./Router/ProductFraRouter");
 const cartRouter = require("./Router/OrderCartRouter");
 const userOrderRouter = require("./Router/UserOrderRouter");
 const blogsRouters = require("./Router/BlogRouter");
+const errorHandler = require("./Controller/MiddleWare/ErrorHandler");
 
 //////MiddleWares/////////
 app.use(express.json())
@@ -69,6 +70,18 @@ app.listen(PORT, () =>{
 })
 
 
+/////Allow header///////////////////
+app.use((req, res, next)=> {
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    next();
+})
 
 
 
+app.use((req, res) => {
+    res.status(404).json({
+         message : `${req.method} ${req.originalUrl} is not an end point to this server`
+    })
+})
+
+app.use(errorHandler);
