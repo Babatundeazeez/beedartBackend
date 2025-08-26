@@ -21,6 +21,8 @@ const errorHandler = require("./Controller/MiddleWare/ErrorHandler");
 
 //////MiddleWares/////////
 app.use(express.json())
+app.use(express.urlencoded({extended : true}))
+
 app.use(cors({
     origin: ["http://localhost:5173","https://beedaart.netlify.app"],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -63,11 +65,7 @@ app.use('/api/blog', blogsRouters)
 
 
 
-///////server Start //////
-app.listen(PORT, () =>{
-    console.log(`Listening to port : ${PORT}`);
-    
-})
+
 
 
 /////Allow header///////////////////
@@ -85,3 +83,9 @@ app.use((req, res) => {
 })
 
 app.use(errorHandler);
+
+///////server Start //////
+app.listen(PORT, () =>{
+    console.log(`Listening to port : ${PORT}`);
+    
+})

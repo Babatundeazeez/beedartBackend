@@ -7,17 +7,31 @@ const sendverificationMail = require("../utilities/SendVerificationMail")
 //////////////////////////////////////////////////////////
 const signUp = async(req, res, next) =>{
 
-    const {password, email, name} = req.body
+    
 
     try {
+        const {password, email, name} = req.body
+
+        ////Hash password///////////////////////
         const salt = await bcrypt.genSalt(10)
         const hashPassword = await bcrypt.hash(password, salt)
 
+
+        ////verify token////////
         const token = generateRandomString(8)  //generate token during sign up
         const verificationExp = Date.now() + 1000 * 60 * 30
 
 
+
+        ////create user//////////
         const user = await userModel.create({...req.body, password : hashPassword, role: req.body.role || "user", verificationToken : token, verificationExp})
+
+         //destruction user name email verification//////
+
+         const userName = name.split( " ")[0]
+
+         sendverificationMail(email, userName, token)
+//////////////////////////////////
 
         if (!user){
             return res.status(400).json({
@@ -31,18 +45,18 @@ const signUp = async(req, res, next) =>{
             user
         })
 
-        //destruction user name
-        const userName = name.split( " ")[0]
+       
 
-        sendverificationMail(email, userName, token)
+
         
-    } catch (error) {
-        console.log(error);
-        next(error)
+    } catch (err) {
+        console.error("Sign Up error",err);
+        next(err)
         
     }
 
 }
+
 /////////////////////////////////////////////////////////////////////////////
 const verifyEmail = async(req, res) =>{
     const {token} = req.params
@@ -73,8 +87,9 @@ const verifyEmail = async(req, res) =>{
         })
 
         
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        console.log(err);
+       // next(err)
         
     }
 }
@@ -89,8 +104,12 @@ const signIn = async(req, res, next) =>{
             return res.status(400).json({
                 status : "error",
                 message : "Email or Password is incorrect"
+            // const err = new Error("Email or Password is incorrect");
+            // err.statusCode = 400;
+            // throw err;
             })
         }
+
         // verify if the password is correct
         const correctedPassword = await bcrypt.compare(password, user.password)
 
@@ -114,9 +133,9 @@ const signIn = async(req, res, next) =>{
 
 
         
-    } catch (error) {
-        console.log(error);
-        next(error)
+    } catch (err) {
+        console.error(err);
+        next(err)
         
     }
 }

@@ -7,8 +7,8 @@ const userScheme = new mongoose.Schema({
     },
     email : {
         type : String,
-        required : true,
-        unique : [true,"Email already axist"]
+        required :  [true,"Email already axist"],
+        unique : true
     },
     address : {
         type : String,
@@ -20,7 +20,7 @@ const userScheme = new mongoose.Schema({
     },
     age : {
         type : String,
-        require : true
+        required : true
     },
     role :{
         type : String,
@@ -29,14 +29,14 @@ const userScheme = new mongoose.Schema({
     },
     isVerify : {
         type : Boolean,
-        dafault : false
+        default : false
     },
     verificationToken : {
         type : String
     },
     verificationExp : {
         type : Date,
-        require : true
+        required : true
     },
     // userId : {
     //     type : String,
