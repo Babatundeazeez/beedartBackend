@@ -18,16 +18,13 @@ const userScheme = new mongoose.Schema({
         type : String,
         required : true
     },
-    age : {
-        type : String,
-        required : true
-    },
+    
     role :{
         type : String,
         enum : ["user", "admin"],
         default : "user"
     },
-    isVerify : {
+    verified : {
         type : Boolean,
         default : false
     },
@@ -38,10 +35,7 @@ const userScheme = new mongoose.Schema({
         type : Date,
         required : true
     },
-    // userId : {
-    //     type : String,
-    //     required : true
-    // }
+    
 })
 
 const userModel = mongoose.model("users", userScheme)

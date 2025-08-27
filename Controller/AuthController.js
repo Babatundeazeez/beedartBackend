@@ -95,7 +95,7 @@ const verifyEmail = async(req, res) =>{
 }
 ///////////////////////////////////////////////////////////////////////
 
-const signIn = async(req, res, next) =>{
+const signIn = async(req, res) =>{
 
     const {email, password} = req.body
     try {
@@ -103,10 +103,8 @@ const signIn = async(req, res, next) =>{
         if (!user){
             return res.status(400).json({
                 status : "error",
-                message : "Email or Password is incorrect"
-            // const err = new Error("Email or Password is incorrect");
-            // err.statusCode = 400;
-            // throw err;
+                message : "User Not Found"
+           
             })
         }
 
@@ -116,26 +114,34 @@ const signIn = async(req, res, next) =>{
         if(!correctedPassword){
             return res.status(400).json({
                 status : "error",
-                message : "Email or Password is incorrect"
+                message : "Invalid Credentials"
             })
         }
         ////////////////Generate accessToken for the user//////////
-        const accessToken = jwt.sign({id: user._id, role: user.role, email: user.email}, process.env.JWT_SECRET,{expiresIn : process.env.tokenExp})
+
+        const accessToken = jwt.sign(
+            {id: user._id, role: user.role, email: user.email}, 
+            process.env.JWT_SECRET,{expiresIn : process.env.tokenExp})
 
         
         
         res.status(200).json({
             status : "success",
             mesage : "Sign In successfully, please proceed to the dashboard",
+            accessToken,
             user,
-            accessToken
+            
         })
 
 
         
-    } catch (err) {
-        console.error(err);
-        next(err)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status : "error",
+            message: error.message
+        })
+        
         
     }
 }

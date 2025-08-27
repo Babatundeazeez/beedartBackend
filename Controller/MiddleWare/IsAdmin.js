@@ -1,15 +1,7 @@
 const IsAdmin = (req, res, next) =>{
-    // if (req.user && req.user.role === "admin"){
-    //     next()
-    // }
-    // else{
-    //     return res.status(400).json({
-    //         status : "error",
-    //         message : "Access denial, Admin can only add product"
-    //     })
-    // }
+   
     try {
-        if (!user){
+        if (!req.user){
             return res.status(401).json({
                 status : "error",
                 message : "Unauthorized. Please log in"
