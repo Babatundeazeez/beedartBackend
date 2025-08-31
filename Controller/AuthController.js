@@ -13,8 +13,13 @@ const signUp = async(req, res, next) =>{
          // check if email already exists
      const existingUser = await userModel.findOne({ email });
      if (existingUser) {
+
+        return res.status(400).json({
+            status : "error",
+            message : "Email already exists"
+        })
     
-        return next({ statusCode: 400, message: "Email already exists" });
+        // return next({ statusCode: 400, message: "Email already exists" });
        
      }
 

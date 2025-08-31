@@ -1,13 +1,8 @@
 const express = require("express")
-
-
 const helmet = require("helmet")
 const cors = require('cors');
 const connectedMongoDb = require("./ConnectedToMDB");
-
-const PORT = 1500;
-
-
+const dotenv = require("dotenv")
 
 
 /////Routers////////
@@ -18,34 +13,20 @@ const cartRouter = require("./Router/OrderCartRouter");
 const userOrderRouter = require("./Router/UserOrderRouter");
 const blogsRouters = require("./Router/BlogRouter");
 const errorHandler = require("./Controller/MiddleWare/ErrorHandler");
-const dotenv = require("dotenv")
+
 
 
 dotenv.config()
 const app = express()
+const PORT = process.env.PORT || 1500;
 
 //////MiddleWares/////////
 app.use(cors())
-app.use(express.json())
-
+app.use(express.json());
 app.use(express.urlencoded({extended : true}))
 
 
 connectedMongoDb()
-
-// app.use(cors({
-//     origin: ["http://localhost:5173","https://beedaart.netlify.app"],
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     credentials: true
-// }))
-
-
-
-
-
-
-
-
 
 
 /////helmet setUp//////////////////////
@@ -74,15 +55,7 @@ app.use('/api/cart', cartRouter)
 app.use('/api/blog', blogsRouters)
 
 
-
-
-/////Allow header///////////////////
- app.use((req, res, next)=> {
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-    next();
-})
-
-/////Only for Unmatch routes//////
+/////Only for 404 Unmatch routes//////
 app.use((req, res, next) => {
 
     const error = new Error(
@@ -92,9 +65,7 @@ app.use((req, res, next) => {
     next(error)
 })
 
-
-
-
+app.use(errorHandler)
 
 ///////server Start //////
 app.listen(PORT, () =>{
@@ -102,7 +73,22 @@ app.listen(PORT, () =>{
     
 })
 
-app.use(errorHandler)
+
+/////Allow header///////////////////
+//  app.use((req, res, next)=> {
+//     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+//     next();
+// })
+
+
+
+
+
+
+
+
+
+
 
 
 
