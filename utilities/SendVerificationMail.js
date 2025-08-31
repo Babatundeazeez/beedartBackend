@@ -17,7 +17,7 @@ const sendverificationMail = (email, userName, token) =>{
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum tempora dolorem architecto distinctio temporibus nemo rem eligendi minima veritatis, eos consequatur, velit, fugit libero quo ipsa commodi est aliquid alias.</p>
         </div>
         <p><b>Please verify your Account here!</b> <a href="${process.env.client_domains}/verify/${token}"></a>Happy</p>
-         <a href="${process.env.client_domains}/verify/${token}">
+         <a className="btn btn-primary" href="${process.env.client_domains}/verify/${token}">
             <p><b>Please verify your Account! here</p>
         </a>
         <p>For more enquiry, please contact our support channel</p>

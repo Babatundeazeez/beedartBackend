@@ -1,6 +1,6 @@
 const productModel = require("../Model/ProductFrame")
 
-const addProduct = async(req, res) =>{
+const addProduct = async(req, res, next) =>{
     const productImage = req.file.path
     try {
         const productFrame = await productModel.create({
@@ -23,8 +23,9 @@ const addProduct = async(req, res) =>{
         })
         
         
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        console.log(err);
+        next(err)
         
     }
 

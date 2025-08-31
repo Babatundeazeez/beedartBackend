@@ -1,6 +1,6 @@
 const blogModel = require("../Model/BlogContent");
 
-const creatBlog = async(req, res) =>{
+const creatBlog = async(req, res, next) =>{
     const blogImage = req.file.path
     try {
         const blog = await blogModel.create({
@@ -21,8 +21,9 @@ const creatBlog = async(req, res) =>{
             blog
         })
         
-    } catch (error) {
-        console.log(error);
+    } catch (err) {
+        console.log(err);
+        next(err)
         
     }
 

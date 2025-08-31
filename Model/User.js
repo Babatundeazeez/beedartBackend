@@ -3,16 +3,16 @@ const mongoose = require('mongoose')
 const userScheme = new mongoose.Schema({
     name : {
         type : String,
-        required : true
+        required : [true, "Name is required"]
     },
     email : {
         type : String,
-        required :  [true,"Email already axist"],
+        required :  [true,"Email is required"],
         unique : true
     },
     address : {
         type : String,
-        required : true
+        required : [true, "Address is required"]
     },
     password : {
         type : String,
@@ -33,7 +33,8 @@ const userScheme = new mongoose.Schema({
     },
     verificationExp : {
         type : Date,
-        required : true
+        required : true,
+        default : ()=>Date.now() + 24 * 60 * 60 * 1000  //24hours
     },
     
 })

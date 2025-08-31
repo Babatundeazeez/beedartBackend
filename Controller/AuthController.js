@@ -7,10 +7,17 @@ const sendverificationMail = require("../utilities/SendVerificationMail")
 //////////////////////////////////////////////////////////
 const signUp = async(req, res, next) =>{
 
-    
-
     try {
         const {password, email, name} = req.body
+
+         // check if email already exists
+     const existingUser = await userModel.findOne({ email });
+     if (existingUser) {
+    
+        return next({ statusCode: 400, message: "Email already exists" });
+       
+     }
+
 
         ////Hash password///////////////////////
         const salt = await bcrypt.genSalt(10)
@@ -26,31 +33,28 @@ const signUp = async(req, res, next) =>{
         ////create user//////////
         const user = await userModel.create({...req.body, password : hashPassword, role: req.body.role || "user", verificationToken : token, verificationExp})
 
-         //destruction user name email verification//////
+        if (!user){
+           
+
+            return res.status(400).json({
+                statusCode : "error",
+                message : "could not sign up"
+            })
+        }
+
+         //send verification email  user name email verification//////
 
          const userName = name.split( " ")[0]
 
          sendverificationMail(email, userName, token)
-//////////////////////////////////
-
-        if (!user){
-            return res.status(400).json({
-                status : "error",
-                message : "could not sign up"
-            })
-        }
+////   
         res.status(200).json({
             status : "success",
             message : "sign Up successfully, check your email to verify your account",
-            user
-        })
-
-       
-
-
+            user,
+        });
         
     } catch (err) {
-        console.error("Sign Up error",err);
         next(err)
         
     }
@@ -58,7 +62,7 @@ const signUp = async(req, res, next) =>{
 }
 
 /////////////////////////////////////////////////////////////////////////////
-const verifyEmail = async(req, res) =>{
+const verifyEmail = async(req, res, next) =>{
     const {token} = req.params
 
    
@@ -66,17 +70,16 @@ const verifyEmail = async(req, res) =>{
         const user = await userModel.findOne({verificationToken : token})
         
         if(!user){
-            return res.status(400).json({
-                error : "error",
-                message : "This token is invalid or it has been verified"
-            })
+           
+            const error = new Error("Invalid or already verified token");
+            error.statusCode = 400;
+            throw error;
         }
         if (user.verificationExp < Date.now()){
-            return res.status(400).json({
-                status: "error",
-                message : "Verification time has expire",
-                user
-            })
+           
+            const error = new Error("Verification time has expired");
+            error.statusCode = 400;
+            throw error;
         }
 
         await userModel.findByIdAndUpdate(user._id, {verificationExp : null, verificationToken : null, verified: true})
@@ -88,35 +91,44 @@ const verifyEmail = async(req, res) =>{
 
         
     } catch (err) {
-        console.log(err);
-       // next(err)
+       // console.log(err);
+        next(err)
         
     }
 }
 ///////////////////////////////////////////////////////////////////////
 
-const signIn = async(req, res) =>{
+const signIn = async(req, res, next) =>{
 
-    const {email, password} = req.body
+    
     try {
+        const {email, password} = req.body
+
         const user = await userModel.findOne({email})
         if (!user){
-            return res.status(400).json({
-                status : "error",
-                message : "User Not Found"
            
-            })
+            const error = new Error("User Not Found")
+            error.statusCode = 404;
+            throw error;
         }
 
         // verify if the password is correct
         const correctedPassword = await bcrypt.compare(password, user.password)
 
         if(!correctedPassword){
-            return res.status(400).json({
-                status : "error",
-                message : "Invalid Credentials"
-            })
+           
+            const error = new Error("Invalid credentials");
+            error.statusCode = 401;
+            throw error;
         }
+
+        if (!user.verified) {
+           
+            const error = new Error("Please verify your email before logging in");
+            error.statusCode = 403;
+            throw error;
+          }
+          
         ////////////////Generate accessToken for the user//////////
 
         const accessToken = jwt.sign(
@@ -135,13 +147,9 @@ const signIn = async(req, res) =>{
 
 
         
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            status : "error",
-            message: error.message
-        })
-        
+    } catch (err) {
+        console.error(err);
+        next(err)
         
     }
 }

@@ -1,4 +1,4 @@
-const handleDuplicateError = (err) => {
+const handleDuplicateError = (err) =>{
     const errorKey = Object.keys(err.keyValue)[0]
     const errorValue = Object.values(err.keyValue)[0]
 
@@ -9,7 +9,7 @@ const handleDuplicateError = (err) => {
         message : errorMessage.message
     }
 
-    return error
+    return error;
 
 }
 ///////////////////////////////////////////////
@@ -36,6 +36,8 @@ const handleValidationError = (err) =>{
 
 
 const errorHandler = (err, req, res, next) => {
+    console.log("Error caught by middleware", err);
+    
     if (err.code === 11000){
         const error = handleDuplicateError(err)
 
