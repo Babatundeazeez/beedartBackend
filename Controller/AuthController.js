@@ -59,10 +59,9 @@ const signUp = async(req, res, next) =>{
             user,
         });
         
-    } catch (error) {
-        console.log(error);
-        
-        next(error)
+    } catch (err) {
+        console.log(err);
+        next(err)
         
     }
 
@@ -154,9 +153,9 @@ const signIn = async(req, res, next) =>{
 
 
         
-    } catch (error) {
-        console.error(error);
-        next(error)
+    } catch (err) {
+        console.error(err);
+        next(err)
         
     }
 }

@@ -35,7 +35,7 @@ const handleValidationError = (err) =>{
     }
 
 
-const errorHandler = (err, req, res) => {
+const errorHandler = (err, req, res,next) => {
     console.log("Error caught by middleware", err);
     
     if (err.code === 11000){
